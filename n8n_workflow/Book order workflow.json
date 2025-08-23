@@ -1,0 +1,153 @@
+{
+  "name": "Book order workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Order book",
+        "formDescription": "Please mention the book name you wish to order.",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Name",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Email",
+              "fieldType": "email",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Book Name",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "ISBN Number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "ca901acb-3f0b-45ea-89ac-afad8148bc23",
+      "name": "On form submission",
+      "webhookId": "25690e74-b59b-4249-bbbc-fb32fd421145"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "9ec0cd42-f546-4ecd-8bcb-91449bed069f",
+              "leftValue": "={{ $json[\"ISBN Number\"] }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notExists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        208,
+        0
+      ],
+      "id": "886d548e-d157-49b6-821e-f08d682748a1",
+      "name": "If"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        416,
+        -96
+      ],
+      "id": "94d1331c-9499-49a8-9dcb-9cb7ac551787",
+      "name": "No Operation, do nothing"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.Email }}",
+        "subject": "Your requested book has been ordered",
+        "emailType": "text",
+        "message": "=Hi  {{ $json.Name }},\n\nThanks for using our website to order your favourite book. Order has been placed for {{ $json[\"Book Name\"] }} with ISBN {{ $json[\"ISBN Number\"] }} successfully.\n\nHappy reading!",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        416,
+        96
+      ],
+      "id": "1e544139-f658-47f4-bc8a-fe2d20b65c54",
+      "name": "Send a message",
+      "webhookId": "6cae53f2-4de3-499b-b73c-7d03d9cc75f5",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "7KnJHRAC0HMRT6XY",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "8a77e9d8-b14c-4d3d-a7f9-676625132d57",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "9eb5cee326009980f56053c045fa1cebf7a5d264f4d8f46545e20382dc552d28"
+  },
+  "id": "duzBHwVeUWAYmVFm",
+  "tags": []
+}
