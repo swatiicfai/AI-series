@@ -1,0 +1,149 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Appointment Calendar ",
+        "formDescription": "To send an automated mail to make appointment",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Name",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Email",
+              "fieldType": "email",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Date",
+              "fieldType": "date",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.2,
+      "position": [
+        -128,
+        -80
+      ],
+      "id": "a2f7a7ba-3513-463c-8aa8-23e759f58712",
+      "name": "On form submission",
+      "webhookId": "7962f5eb-4e89-47b9-bffb-7ea479c15b6c"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "496c991c-9779-4e39-a33c-a7a611602a2a",
+              "leftValue": "={{ $json.Date }}",
+              "rightValue": "={{ $json.submittedAt }}",
+              "operator": {
+                "type": "dateTime",
+                "operation": "beforeOrEquals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        80,
+        -80
+      ],
+      "id": "e4da065d-d983-4a2a-a44b-47b9265d67ae",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "sendTo": "uroojkhan19786@gmail.com",
+        "subject": "=Appointment  confirmed {{ $today }}",
+        "message": "Appointment Confirmed",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        288,
+        -136.5
+      ],
+      "id": "00c44ac0-56d9-4ee7-88cd-31a5c02081f3",
+      "name": "Send a message",
+      "webhookId": "d3682bab-0caa-42aa-960c-b48a5372e4d1",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "7fzFlFU2pKgMe3My",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        288,
+        16
+      ],
+      "id": "7f05e5f7-9110-4609-8c8f-8e40c62e4b96",
+      "name": "No Operation, do nothing"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "e19900c9-03d6-417e-89c5-1cb3741c0552",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "e2584822318797a29159f24c8c9e6b0103964fadefb6cf3e189f347cfef42861"
+  },
+  "id": "FLHCNPGMCsb1hupv",
+  "tags": []
+}
